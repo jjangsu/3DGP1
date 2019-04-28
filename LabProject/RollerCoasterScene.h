@@ -32,6 +32,6 @@ public:
 	float accumulateTime = 0.0f;
 
 	XMFLOAT3 rotationAngle{ 0.f, 0.f, 0.f };
-
+	XMFLOAT4X4 rotationMatrix;
 };
 

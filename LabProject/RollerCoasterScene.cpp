@@ -28,6 +28,7 @@ void CRollerCoasterScene::BuildObjects()
 		m_pRailObject[i]->SetColor(RGB(255, 216, 0));
 	}
 
+	rotationMatrix = Matrix4x4::Identity();
 }
 
 void CRollerCoasterScene::ReleaseObjects()
@@ -48,17 +49,23 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 
 	XMFLOAT4X4 mRotation = Matrix4x4::Identity();
 	// mRotation = Matrix4x4::Multiply(rotationAngle);
-	
-	// XMFLOAT3 oldLook = m_pRailObject[nRail - 1]->GetLook();
-	XMFLOAT3 oldPosition = m_pRailObject[nRail - 1]->GetPosition();
 
-	
+	// XMFLOAT3 oldLook = m_pRailObject[nRail - 1]->GetLook();
+	// XMFLOAT3 oldPosition = m_pRailObject[nRail - 1]->GetPosition();
+
+
 	if (pRailCubeMesh && accumulateTime >= timeToMakeRail) {
 		m_pRailObject.emplace_back(nullptr);
 		m_pRailObject[nRail] = new CRailObject;
 
-		m_pRailObject[nRail]->SetPosition(oldPosition.x, oldPosition.y, oldPosition.z);
+		// 바로 전에 그린 레일의 행렬을 가져와서 지금 그릴 레일 행렬에 저장 
+		m_pRailObject[nRail]->m_xmf4x4World = m_pRailObject[nRail - 1]->m_xmf4x4World;
+		// 키 입력을 받았으면 회전 (사실 없어도 회전은 함)
 		m_pRailObject[nRail]->Rotate(rotationAngle.x, rotationAngle.y, rotationAngle.z);
+		// 초기화 해주기 
+		rotationAngle = XMFLOAT3(0.f, 0.f, 0.f);
+		//rotationMatrix = Matrix4x4::Identity();
+		// m_pRailObject[nRail]->Rotate(rotationAngle.x, rotationAngle.y, rotationAngle.z);
 
 		m_pRailObject[nRail]->Move(m_pRailObject[nRail]->GetLook(), RailSpeed);
 
@@ -74,7 +81,7 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 
 	float Speed = RailSpeed * (1 / timeToMakeRail); // 1초에 5개의 레일 
 
-	// 앞 레일과 플레이어의 각도 구하기 --> 내적 이용
+	// 1. 앞 레일과 플레이어의 각도 구하기 --> 내적 이용
 	// XMFLOAT3 frontRailLook = m_pRailObject[nRail - 4]->GetLook();
 	// XMFLOAT3 backRailLook = m_pRailObject[nRail - 6]->GetLook();
 	//std::cout << m_pPlayer->m_xmf3Look.x << ", " << m_pPlayer->m_xmf3Look.y << ", " << m_pPlayer->m_xmf3Look.z << std::endl;
@@ -89,10 +96,14 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 	// 	PlayerRotation *= -1.f;
 
 	// 왜 위처럼 하면 잘 안되는거지?!?!?!?!?!?!?!??!?!
+	// 선형 보간을 하면 더 자연스럽게 된다고 합니다.
 
+	// 2. 바로 앞 레일의 look, up, right로 내 player설정
 	m_pPlayer->m_xmf3Look = m_pRailObject[nRail - 4]->GetLook();
 	m_pPlayer->m_xmf3Up = m_pRailObject[nRail - 4]->GetUp();
 	m_pPlayer->m_xmf3Right = m_pRailObject[nRail - 4]->GetRight();
+
+
 
 	// m_pPlayer->Rotate(0.f, PlayerRotation, 0.f);
 	m_pPlayer->Move(DIR_FORWARD, Speed * fElapsedTime);
@@ -109,16 +120,28 @@ void CRollerCoasterScene::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 
 void CRollerCoasterScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+	float angle = 5.f;
+
 	switch (nMessageID)
 	{
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
 		case VK_LEFT:
-			rotationAngle = Vector3::Add(rotationAngle, { 0.f, -10.f, 0.f });
+			rotationAngle = Vector3::Add(rotationAngle, { 0.f, -angle, 0.f });
+			//rotationMatrix = Matrix4x4::Multiply(rotationMatrix, Matrix4x4::RotationYawPitchRoll(0.f, -10.f, 0.f));
 			break;
 		case VK_RIGHT:
-			rotationAngle = Vector3::Add(rotationAngle, { 0.f, 10.f, 0.f });
+			rotationAngle = Vector3::Add(rotationAngle, { 0.f, angle, 0.f });
+			//rotationMatrix = Matrix4x4::Multiply(rotationMatrix, Matrix4x4::RotationYawPitchRoll(0.f, 10.f, 0.f));
+			break;
+		case VK_UP:
+			rotationAngle = Vector3::Add(rotationAngle, { angle, 0.f, 0.f });
+
+			//rotationMatrix = Matrix4x4::Multiply(rotationMatrix, Matrix4x4::RotationYawPitchRoll(10.f, 0.f, 0.f));
+			break;
+		case VK_DOWN:
+			rotationAngle = Vector3::Add(rotationAngle, { -angle, 0.f, 0.f });
 			break;
 		default:
 			break;

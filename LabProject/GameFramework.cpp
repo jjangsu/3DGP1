@@ -193,7 +193,7 @@ void CGameFramework::BuildObjects()
 	m_pPlayer = new CAirplanePlayer();
 	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
 	m_pPlayer->SetMesh(pAirplaneMesh);
-	m_pPlayer->SetColor(RGB(255, 152, 149));
+	m_pPlayer->SetColor(RGB(255, 130, 130));
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
 	m_nScenes = 5;
@@ -251,7 +251,7 @@ void CGameFramework::ProcessInput()
 	}
 	if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f))
 	{
-		if (cxDelta || cyDelta)
+		if (m_nScene != 5 && (cxDelta || cyDelta)) //  
 		{
 			if (pKeyBuffer[VK_RBUTTON] & 0xF0)
 				m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
@@ -259,7 +259,7 @@ void CGameFramework::ProcessInput()
 				m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
 		}
 
-		if (dwDirection)
+		if (m_nScene != 5 && dwDirection)
 			m_pPlayer->Move(dwDirection, 0.5f);
 	}
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
@@ -278,7 +278,7 @@ void CGameFramework::FrameAdvance()
 
 	m_pScene->Animate(m_GameTimer.GetTimeElapsed());
 
-	ClearFrameBuffer(RGB(187, 247, 255));
+	ClearFrameBuffer(RGB(0, 0, 0));
 
 	m_pScene->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);
 	m_pPlayer->Render(m_hDCFrameBuffer, m_pPlayer->m_pCamera);

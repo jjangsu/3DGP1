@@ -164,6 +164,7 @@ namespace Vector3
 	{
 		XMFLOAT3 xmf3Result;
 		XMStoreFloat3(&xmf3Result, XMVector3TransformNormal(XMLoadFloat3(&xmf3Vector), xmxm4x4Transform));
+		// XMVector3TransformNormal 벡터와 행렬의 곱 계산 (벡터 변환) 동차좌표 0 적용
 		return(xmf3Result);
 	}
 

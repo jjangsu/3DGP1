@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "RollerCoasterScene.h"
+#include <iostream>
 
 CRollerCoasterScene::CRollerCoasterScene()
 {
@@ -15,16 +16,6 @@ void CRollerCoasterScene::BuildObjects()
 	CWallMesh *pWallCubeMesh = new CWallMesh(fHalfWidth * 2.0f, fHalfHeight * 2.0f, fHalfDepth * 2.0f, 30);
 	pWallCubeMesh->SetOOBB(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth * 0.3f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	m_pWallsObject = new CWallsObject();
-	m_pWallsObject->SetPosition(0.0f, 0.0f, 0.0f);
-	m_pWallsObject->SetMesh(pWallCubeMesh);
-	m_pWallsObject->SetColor(RGB(80, 80, 80));
-	m_pWallsObject->m_pxmf4WallPlanes[0] = XMFLOAT4(+1.0f, 0.0f, 0.0f, fHalfWidth);
-	m_pWallsObject->m_pxmf4WallPlanes[1] = XMFLOAT4(-1.0f, 0.0f, 0.0f, fHalfWidth);
-	m_pWallsObject->m_pxmf4WallPlanes[2] = XMFLOAT4(0.0f, +1.0f, 0.0f, fHalfHeight);
-	m_pWallsObject->m_pxmf4WallPlanes[3] = XMFLOAT4(0.0f, -1.0f, 0.0f, fHalfHeight);
-	m_pWallsObject->m_pxmf4WallPlanes[4] = XMFLOAT4(0.0f, 0.0f, +1.0f, fHalfDepth);
-	m_pWallsObject->m_pxmf4WallPlanes[5] = XMFLOAT4(0.0f, 0.0f, -1.0f, fHalfDepth);
 
 	// float fWidth = 10.0f, fHeight = 1.0f, fDepth = 4.0f;
 	pRailCubeMesh = new CRailMesh(4.0f, 4.0f, 4.0f);
@@ -32,7 +23,7 @@ void CRollerCoasterScene::BuildObjects()
 	for (int i = 0; i < nRail; ++i) {
 		m_pRailObject.emplace_back(nullptr);
 		m_pRailObject[i] = new CRailObject;
-		m_pRailObject[i]->SetPosition(0.0f, 0.0f, 0.0f + RailGap * i);
+		m_pRailObject[i]->SetPosition(0.0f, 0.0f, 0.0f + RailSpeed * i);
 		m_pRailObject[i]->SetMesh(pRailCubeMesh);
 		m_pRailObject[i]->SetColor(RGB(255, 216, 0));
 	}
@@ -43,92 +34,73 @@ void CRollerCoasterScene::ReleaseObjects()
 {
 	CScene::ReleaseObjects();
 
-	if (m_pWallsObject) delete m_pWallsObject;
+	// if (m_pWallsObject) delete m_pWallsObject;
 	if (m_pRailObject[0]) delete m_pRailObject[0];
 }
 
-void CRollerCoasterScene::CheckObjectByWallCollisions()
-{
-	for (int i = 0; i < m_nObjects; i++)
-	{
-		ContainmentType containType = m_pWallsObject->m_xmOOBB.Contains(m_ppObjects[i]->m_xmOOBB);
-		switch (containType)
-		{
-		case DISJOINT:
-		{
-			int nPlaneIndex = -1;
-			for (int j = 0; j < 6; j++)
-			{
-				PlaneIntersectionType intersectType = m_ppObjects[i]->m_xmOOBB.Intersects(XMLoadFloat4(&m_pWallsObject->m_pxmf4WallPlanes[j]));
-				if (intersectType == BACK)
-				{
-					nPlaneIndex = j;
-					break;
-				}
-			}
-			if (nPlaneIndex != -1)
-			{
-				XMVECTOR xmvNormal = XMVectorSet(m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].x, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].y, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].z, 0.0f);
-				XMVECTOR xmvReflect = XMVector3Reflect(XMLoadFloat3(&m_ppObjects[i]->m_xmf3MovingDirection), xmvNormal);
-				XMStoreFloat3(&m_ppObjects[i]->m_xmf3MovingDirection, xmvReflect);
-			}
-			break;
-		}
-		case INTERSECTS:
-		{
-			int nPlaneIndex = -1;
-			for (int j = 0; j < 6; j++)
-			{
-				PlaneIntersectionType intersectType = m_ppObjects[i]->m_xmOOBB.Intersects(XMLoadFloat4(&m_pWallsObject->m_pxmf4WallPlanes[j]));
-				if (intersectType == INTERSECTING)
-				{
-					nPlaneIndex = j;
-					break;
-				}
-			}
-			if (nPlaneIndex != -1)
-			{
-				XMVECTOR xmvNormal = XMVectorSet(m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].x, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].y, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].z, 0.0f);
-				XMVECTOR xmvReflect = XMVector3Reflect(XMLoadFloat3(&m_ppObjects[i]->m_xmf3MovingDirection), xmvNormal);
-				XMStoreFloat3(&m_ppObjects[i]->m_xmf3MovingDirection, xmvReflect);
-			}
-			break;
-		}
-		case CONTAINS:
-			break;
-		}
-	}
-}
 
 void CRollerCoasterScene::Animate(float fElapsedTime)
 {
-	m_pWallsObject->Animate(fElapsedTime);
-	if (m_pWallsObject->m_xmOOBB.Contains(XMLoadFloat3(&m_pPlayer->m_xmf3Position)) == DISJOINT) m_pWallsObject->SetPosition(m_pPlayer->m_xmf3Position);
+	accumulateTime += fElapsedTime;
 
-	// CheckObjectByWallCollisions();
+	XMFLOAT3 newPosition(0, 0, 4.f);
+	newPosition = Vector3::Add(m_pRailObject[nRail - 1]->GetPosition(), newPosition);
 
+	XMFLOAT4X4 mRotation = Matrix4x4::Identity();
+	// mRotation = Matrix4x4::Multiply(rotationAngle);
+	
+	// XMFLOAT3 oldLook = m_pRailObject[nRail - 1]->GetLook();
+	XMFLOAT3 oldPosition = m_pRailObject[nRail - 1]->GetPosition();
 
-	if (pRailCubeMesh && accumulateTime > 1.f) {
+	
+	if (pRailCubeMesh && accumulateTime >= timeToMakeRail) {
 		m_pRailObject.emplace_back(nullptr);
 		m_pRailObject[nRail] = new CRailObject;
-		m_pRailObject[nRail]->SetPosition(0.0f, 0.0f, 0.0f + RailGap * nRail);
+
+		m_pRailObject[nRail]->SetPosition(oldPosition.x, oldPosition.y, oldPosition.z);
+		m_pRailObject[nRail]->Rotate(rotationAngle.x, rotationAngle.y, rotationAngle.z);
+
+		m_pRailObject[nRail]->Move(m_pRailObject[nRail]->GetLook(), RailSpeed);
+
 		m_pRailObject[nRail]->SetMesh(pRailCubeMesh);
 		m_pRailObject[nRail]->SetColor(RGB(255, 216, 0));
 		nRail++;
-		accumulateTime = 0.0f;
+		accumulateTime -= timeToMakeRail;
 	}
 
 	for (const auto& r : m_pRailObject)
 		r->Animate(fElapsedTime);
 
+
+	float Speed = RailSpeed * (1 / timeToMakeRail); // 1초에 5개의 레일 
+
+	// 앞 레일과 플레이어의 각도 구하기 --> 내적 이용
+	// XMFLOAT3 frontRailLook = m_pRailObject[nRail - 4]->GetLook();
+	// XMFLOAT3 backRailLook = m_pRailObject[nRail - 6]->GetLook();
+	//std::cout << m_pPlayer->m_xmf3Look.x << ", " << m_pPlayer->m_xmf3Look.y << ", " << m_pPlayer->m_xmf3Look.z << std::endl;
+	//float PlayerRotation = acosf(Vector3::DotProduct(m_pPlayer->m_xmf3Look, frontRailLook));
+	//std::cout << (float)PlayerRotation << std::endl;
+	//XMFLOAT3 Cross = Vector3::CrossProduct(m_pPlayer->m_xmf3Look, frontRailLook);
+	// 회전 방향 정해주기 
+	// float UpDot = Vector3::DotProduct(Cross, m_pPlayer->m_xmf3Up);
+	// std::cout << (float)UpDot << std::endl;
+	// printf("%f\n", acosf(UpDot));
+	// if (UpDot < 0.f)
+	// 	PlayerRotation *= -1.f;
+
+	// 왜 위처럼 하면 잘 안되는거지?!?!?!?!?!?!?!??!?!
+
+	m_pPlayer->m_xmf3Look = m_pRailObject[nRail - 4]->GetLook();
+	m_pPlayer->m_xmf3Up = m_pRailObject[nRail - 4]->GetUp();
+	m_pPlayer->m_xmf3Right = m_pRailObject[nRail - 4]->GetRight();
+
+	// m_pPlayer->Rotate(0.f, PlayerRotation, 0.f);
+	m_pPlayer->Move(DIR_FORWARD, Speed * fElapsedTime);
 	CScene::Animate(fElapsedTime);
-	
-	accumulateTime += fElapsedTime;
 }
 
 void CRollerCoasterScene::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 {
-	m_pWallsObject->Render(hDCFrameBuffer, pCamera);
 	for (int i = 0; i < m_pRailObject.size(); ++i)
 		m_pRailObject[i]->Render(hDCFrameBuffer, pCamera);
 
@@ -143,7 +115,10 @@ void CRollerCoasterScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID
 		switch (wParam)
 		{
 		case VK_LEFT:
-
+			rotationAngle = Vector3::Add(rotationAngle, { 0.f, -10.f, 0.f });
+			break;
+		case VK_RIGHT:
+			rotationAngle = Vector3::Add(rotationAngle, { 0.f, 10.f, 0.f });
 			break;
 		default:
 			break;

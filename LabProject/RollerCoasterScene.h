@@ -6,17 +6,16 @@
 
 class CRollerCoasterScene : public CScene
 {
+	// CWallsObject				*m_pWallsObject = NULL;
+	std::deque <CRailObject*>	 m_pRailObject;
+
 public:
 	CRollerCoasterScene();
 	virtual ~CRollerCoasterScene();
 
-	CWallsObject				*m_pWallsObject = NULL;
-	std::deque <CRailObject*>	 m_pRailObject;
 
 	virtual void BuildObjects();
 	virtual void ReleaseObjects();
-
-	void CheckObjectByWallCollisions();
 
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera *pCamera);
@@ -25,10 +24,14 @@ public:
 
 public:
 	int nRail = 5;
-	float RailGap = 4.0f;
+	float timeToMakeRail = 0.2f;
+	float RailSpeed = 4.0f;
 
 	CRailMesh* pRailCubeMesh = nullptr;
 
 	float accumulateTime = 0.0f;
+
+	XMFLOAT3 rotationAngle{ 0.f, 0.f, 0.f };
+
 };
 

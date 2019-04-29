@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RollerCoasterScene.h"
 #include <iostream>
+#include <iterator>
 
 CRollerCoasterScene::CRollerCoasterScene()
 {
@@ -58,6 +59,7 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 		m_pRailObject.emplace_back(nullptr);
 		m_pRailObject[nRail] = new CRailObject;
 
+		// auto RailIter = m_pRailObject.begin();
 		// 바로 전에 그린 레일의 행렬을 가져와서 지금 그릴 레일 행렬에 저장 
 		m_pRailObject[nRail]->m_xmf4x4World = m_pRailObject[nRail - 1]->m_xmf4x4World;
 		// 키 입력을 받았으면 회전 (사실 없어도 회전은 함)
@@ -71,12 +73,16 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 
 		m_pRailObject[nRail]->SetMesh(pRailCubeMesh);
 		m_pRailObject[nRail]->SetColor(RGB(255, 216, 0));
-		nRail++;
+		if (nRail < 30)
+			nRail++;
 		accumulateTime -= timeToMakeRail;
 	}
 
 	for (const auto& r : m_pRailObject)
 		r->Animate(fElapsedTime);
+
+	if (m_pRailObject.size() > 30)
+		m_pRailObject.pop_front();
 
 
 	float Speed = RailSpeed * (1 / timeToMakeRail); // 1초에 5개의 레일 

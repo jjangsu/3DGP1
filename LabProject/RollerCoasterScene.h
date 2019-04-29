@@ -24,7 +24,7 @@ public:
 
 public:
 	int nRail = 5;
-	float timeToMakeRail = 0.2f;
+	float timeToMakeRail = 0.15f;
 	float RailSpeed = 4.0f;
 
 	CRailMesh* pRailCubeMesh = nullptr;

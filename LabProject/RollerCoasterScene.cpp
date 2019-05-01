@@ -149,6 +149,8 @@ void CRollerCoasterScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID
 			m_dBulletObject[BulletNum]->SetMesh(pBulletMesh);
 			m_dBulletObject[BulletNum]->SetPosition(m_pPlayer->m_xmf3Position.x, m_pPlayer->m_xmf3Position.y, m_pPlayer->m_xmf3Position.z);
 			m_dBulletObject[BulletNum]->SetColor(RGB(255, 0, 0));
+			// 플레이어 회전 했을 경우 총알도 그방향 보도록 고치기 
+			// m_dBulletObject[BulletNum]->m_xmf3BulletVectors = m_pPlayer->m_xmf3Look;
 			// m_dBulletObject[BulletNum]->SetMovingDirection(m_pPlayer->m_xmf3MovingDirection);
 			// m_dBulletObject[BulletNum]->m_xmf3BulletVectors = XMFLOAT3(m_pPlayer->m_xmf3Look);
 			BulletNum += 1;

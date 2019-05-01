@@ -11,6 +11,8 @@ public:
 	float						m_fElapsedTimes = 0.2f;
 	float						m_fBulletSpeed = 10.0f;
 
+	float						m_fBulletRotation = 90.f;
+
 	XMFLOAT3					m_xmf3Color;
 
 	void Render(HDC hDCFrameBuffer, CCamera *pCamera);

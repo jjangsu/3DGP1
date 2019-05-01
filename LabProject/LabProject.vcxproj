@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BulletObject.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionScene.cpp" />
     <ClCompile Include="ExplosionScene.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="WallsObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletObject.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionScene.h" />
     <ClInclude Include="RailObject.h" />

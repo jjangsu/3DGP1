@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "WallsObject.h"
 #include "RailObject.h"
+#include "BulletObject.h"
 #include <deque>
 
 class CRollerCoasterScene : public CScene
@@ -33,5 +34,9 @@ public:
 
 	XMFLOAT3 rotationAngle{ 0.f, 0.f, 0.f };
 	XMFLOAT4X4 rotationMatrix;
+
+	CCubeMesh* pBulletMesh;
+	std::deque<CBulletObject*> m_dBulletObject;
+	int BulletNum = 0;
 };
 

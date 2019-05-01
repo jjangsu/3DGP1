@@ -78,6 +78,9 @@
     <ClCompile Include="RollerCoasterScene.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="BulletObject.cpp">
+      <Filter>소스 파일\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameFramework.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="RollerCoasterScene.h">
       <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletObject.h">
+      <Filter>소스 파일\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

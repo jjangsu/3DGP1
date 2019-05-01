@@ -30,6 +30,9 @@ void CRollerCoasterScene::BuildObjects()
 	}
 
 	rotationMatrix = Matrix4x4::Identity();
+
+	pBulletMesh = new CCubeMesh(0.5f, 0.5f, 0.5f);
+
 }
 
 void CRollerCoasterScene::ReleaseObjects()
@@ -51,15 +54,10 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 	XMFLOAT4X4 mRotation = Matrix4x4::Identity();
 	// mRotation = Matrix4x4::Multiply(rotationAngle);
 
-	// XMFLOAT3 oldLook = m_pRailObject[nRail - 1]->GetLook();
-	// XMFLOAT3 oldPosition = m_pRailObject[nRail - 1]->GetPosition();
-
-
 	if (pRailCubeMesh && accumulateTime >= timeToMakeRail) {
 		m_pRailObject.emplace_back(nullptr);
 		m_pRailObject[nRail] = new CRailObject;
 
-		// auto RailIter = m_pRailObject.begin();
 		// 바로 전에 그린 레일의 행렬을 가져와서 지금 그릴 레일 행렬에 저장 
 		m_pRailObject[nRail]->m_xmf4x4World = m_pRailObject[nRail - 1]->m_xmf4x4World;
 		// 키 입력을 받았으면 회전 (사실 없어도 회전은 함)
@@ -87,21 +85,6 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 
 	float Speed = RailSpeed * (1 / timeToMakeRail); // 1초에 5개의 레일 
 
-	// 1. 앞 레일과 플레이어의 각도 구하기 --> 내적 이용
-	// XMFLOAT3 frontRailLook = m_pRailObject[nRail - 4]->GetLook();
-	// XMFLOAT3 backRailLook = m_pRailObject[nRail - 6]->GetLook();
-	//std::cout << m_pPlayer->m_xmf3Look.x << ", " << m_pPlayer->m_xmf3Look.y << ", " << m_pPlayer->m_xmf3Look.z << std::endl;
-	//float PlayerRotation = acosf(Vector3::DotProduct(m_pPlayer->m_xmf3Look, frontRailLook));
-	//std::cout << (float)PlayerRotation << std::endl;
-	//XMFLOAT3 Cross = Vector3::CrossProduct(m_pPlayer->m_xmf3Look, frontRailLook);
-	// 회전 방향 정해주기 
-	// float UpDot = Vector3::DotProduct(Cross, m_pPlayer->m_xmf3Up);
-	// std::cout << (float)UpDot << std::endl;
-	// printf("%f\n", acosf(UpDot));
-	// if (UpDot < 0.f)
-	// 	PlayerRotation *= -1.f;
-
-	// 왜 위처럼 하면 잘 안되는거지?!?!?!?!?!?!?!??!?!
 	// 선형 보간을 하면 더 자연스럽게 된다고 합니다.
 
 	// 2. 바로 앞 레일의 look, up, right로 내 player설정
@@ -110,9 +93,18 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 	m_pPlayer->m_xmf3Right = m_pRailObject[nRail - 4]->GetRight();
 
 
-
-	// m_pPlayer->Rotate(0.f, PlayerRotation, 0.f);
 	m_pPlayer->Move(DIR_FORWARD, Speed * fElapsedTime);
+
+
+	for (const auto& bullet : m_dBulletObject) {
+		bullet->Animate(fElapsedTime);
+		bullet->Move(bullet->GetLook(), bullet->m_fBulletSpeed * bullet->m_fElapsedTimes);
+		if (m_dBulletObject.size() > 0 && m_dBulletObject[0]->GetPosition().z > m_pPlayer->m_xmf3Position.z + 100.0f) {
+			m_dBulletObject.pop_front();
+			BulletNum--;
+		}
+	}
+
 	CScene::Animate(fElapsedTime);
 }
 
@@ -120,6 +112,9 @@ void CRollerCoasterScene::Render(HDC hDCFrameBuffer, CCamera *pCamera)
 {
 	for (int i = 0; i < m_pRailObject.size(); ++i)
 		m_pRailObject[i]->Render(hDCFrameBuffer, pCamera);
+
+	for (auto& bullet : m_dBulletObject)
+		bullet->Render(hDCFrameBuffer, pCamera);
 
 	CScene::Render(hDCFrameBuffer, pCamera);
 }
@@ -143,11 +138,20 @@ void CRollerCoasterScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID
 			break;
 		case VK_UP:
 			rotationAngle = Vector3::Add(rotationAngle, { angle, 0.f, 0.f });
-
 			//rotationMatrix = Matrix4x4::Multiply(rotationMatrix, Matrix4x4::RotationYawPitchRoll(10.f, 0.f, 0.f));
 			break;
 		case VK_DOWN:
 			rotationAngle = Vector3::Add(rotationAngle, { -angle, 0.f, 0.f });
+			break;
+		case VK_SPACE:
+			m_dBulletObject.emplace_back(nullptr);
+			m_dBulletObject[BulletNum] = new CBulletObject();
+			m_dBulletObject[BulletNum]->SetMesh(pBulletMesh);
+			m_dBulletObject[BulletNum]->SetPosition(m_pPlayer->m_xmf3Position.x, m_pPlayer->m_xmf3Position.y, m_pPlayer->m_xmf3Position.z);
+			m_dBulletObject[BulletNum]->SetColor(RGB(255, 0, 0));
+			// m_dBulletObject[BulletNum]->SetMovingDirection(m_pPlayer->m_xmf3MovingDirection);
+			// m_dBulletObject[BulletNum]->m_xmf3BulletVectors = XMFLOAT3(m_pPlayer->m_xmf3Look);
+			BulletNum += 1;
 			break;
 		default:
 			break;

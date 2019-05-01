@@ -18,7 +18,7 @@ CPlayer::CPlayer()
 	m_xmf3Velocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
-CPlayer::~CPlayer()
+CPlayer::~CPlayer() 
 {
 }
 

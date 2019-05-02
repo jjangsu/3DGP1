@@ -97,8 +97,8 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 
 
 	for (const auto& bullet : m_dBulletObject) {
-		bullet->Animate(fElapsedTime);
-		bullet->Move(bullet->GetLook(), bullet->m_fBulletSpeed * bullet->m_fElapsedTimes);
+		// bullet->Animate(fElapsedTime);
+		bullet->Move(bullet->m_xmf3MovingDirection, bullet->m_fBulletSpeed * bullet->m_fElapsedTimes);
 		if (m_dBulletObject.size() > 0 && m_dBulletObject[0]->GetPosition().z > m_pPlayer->m_xmf3Position.z + 100.0f) {
 			m_dBulletObject.pop_front();
 			BulletNum--;
@@ -153,6 +153,9 @@ void CRollerCoasterScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID
 			// m_dBulletObject[BulletNum]->m_xmf3BulletVectors = m_pPlayer->m_xmf3Look;
 			// m_dBulletObject[BulletNum]->SetMovingDirection(m_pPlayer->m_xmf3MovingDirection);
 			// m_dBulletObject[BulletNum]->m_xmf3BulletVectors = XMFLOAT3(m_pPlayer->m_xmf3Look);
+
+			//m_dBulletObject[BulletNum]->m_xmf4x4World = m_pPlayer->m_xmf4x4World
+			m_dBulletObject[BulletNum]->SetMovingDirection(m_pPlayer->m_xmf3Look);
 			BulletNum += 1;
 			break;
 		default:

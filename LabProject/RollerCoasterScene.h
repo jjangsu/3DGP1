@@ -38,5 +38,6 @@ public:
 	CCubeMesh* pBulletMesh;
 	std::deque<CBulletObject*> m_dBulletObject;
 	int BulletNum = 0;
+	float fBulletMaxdistance = 90.f;
 };
 

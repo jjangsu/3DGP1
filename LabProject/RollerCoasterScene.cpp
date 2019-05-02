@@ -99,8 +99,8 @@ void CRollerCoasterScene::Animate(float fElapsedTime)
 	for (const auto& bullet : m_dBulletObject) {
 		// bullet->Animate(fElapsedTime);
 		bullet->Move(bullet->m_xmf3MovingDirection, bullet->m_fBulletSpeed * bullet->m_fElapsedTimes);
-		if (m_dBulletObject.size() > 0 && m_dBulletObject[0]->GetPosition().z > m_pPlayer->m_xmf3Position.z + 100.0f) {
-			m_dBulletObject.pop_front();
+		if (m_dBulletObject.size() > 0 && m_dBulletObject[0]->GetPosition().z > m_pPlayer->m_xmf3Position.z + fBulletMaxdistance) {
+ 			m_dBulletObject.pop_front();
 			BulletNum--;
 		}
 	}

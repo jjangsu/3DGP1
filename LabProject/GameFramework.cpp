@@ -140,7 +140,7 @@ void CGameFramework::BuildObjects()
 
 	m_nScene = 5; // 키보드 입력을 따로 받기 위해서 
 
-	m_nScene = new CRollerCoasterScene();
+	m_pScene = new CRollerCoasterScene();
 	m_pScene->BuildObjects();
 
 	m_pScene->m_pPlayer = m_pPlayer;

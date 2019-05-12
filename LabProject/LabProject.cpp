@@ -29,29 +29,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
-	{
-		AllocConsole();
-		SetConsoleTitle(TEXT("Debugging Console"));
-		typedef struct
-		{
-			char* _ptr;
-			int _cnt;
-			char* _base;
-			int _flag;
-			int _file;
-			int _charbuf;
-			int _bufsiz;
-			char* _tmpfname;
-		} FILE_COMPLETE;
 
-		*(FILE_COMPLETE*)stdout = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_OUTPUT_HANDLE)), _O_TEXT), "w");
-		*(FILE_COMPLETE*)stderr = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_ERROR_HANDLE)), _O_TEXT), "w");
-		*(FILE_COMPLETE*)stdin = *(FILE_COMPLETE*)_fdopen(_open_osfhandle(PtrToLong(GetStdHandle(STD_INPUT_HANDLE)), _O_TEXT), "r");
-		setvbuf(stdout, NULL, _IONBF, 0);
-		setvbuf(stderr, NULL, _IONBF, 0);
-		setvbuf(stdin, NULL, _IONBF, 0);
-		EnableMenuItem(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_GRAYED);
-	}
  	// TODO: 여기에 코드를 입력합니다.
 	MSG msg;
 	HACCEL hAccelTable;

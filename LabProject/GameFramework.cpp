@@ -89,63 +89,6 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 		case VK_ESCAPE:
 			::PostQuitMessage(0);
 			break;
-		case 'Z':
-		{
-			//if (1)//(m_pScene)
-			//{
-			//	m_pScene->ReleaseObjects();
-			//	delete m_pScene;
-			//}
-			//m_nScene = (m_nScene + 1) % m_nScenes;
-			//switch (m_nScene)
-			//{
-			//case 0:
-			//	m_pScene = new CPlayerScene();
-			//	break;
-			//case 1:
-			//	m_pScene = new CCollisionScene();
-			//	break;
-			//case 2:
-			//	m_pScene = new CExplosionScene();
-			//	break;
-			//case 3:
-			//	m_pScene = new CRunAwayScene();
-			//	break;
-			//case 4:
-			//	m_pScene = new CRollerCoasterScene();
-			//	break;
-			//}
-
-			//if (m_pPlayer) delete m_pPlayer;
-			//if (m_nScene == 3)
-			//{
-			//	CCubeMesh *pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
-			//	m_pPlayer = new CTerrainPlayer();
-			//	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
-			//	m_pPlayer->SetMesh(pCubeMesh);
-			//	m_pPlayer->SetColor(RGB(255, 0, 0));
-			//	m_pPlayer->SetMesh(pCubeMesh);
-			//	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 50.0f, -35.0f));
-			//}
-			//else
-			//{
-			//	CAirplaneMesh *pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
-			//	m_pPlayer = new CAirplanePlayer();
-			//	if (m_nScene == 4)
-			//		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
-			//	else
-			//		m_pPlayer->SetPosition(0.0f, 0.0f, -30.0f);
-			//	m_pPlayer->SetMesh(pAirplaneMesh);
-			//	m_pPlayer->SetColor(RGB(255, 152, 149));
-			//	m_pPlayer->SetMesh(pAirplaneMesh);
-			//	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
-			//}
-
-			//m_pScene->m_pPlayer = m_pPlayer;
-
-			//m_pScene->BuildObjects();
-			//break;
-		}
 		default:
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;

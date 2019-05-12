@@ -7,7 +7,6 @@
 
 class CRollerCoasterScene : public CScene
 {
-	// CWallsObject				*m_pWallsObject = NULL;
 	std::deque <CRailObject*>	 m_pRailObject;
 
 public:
@@ -24,20 +23,22 @@ public:
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
 public:
-	int nRail = 5;
-	float timeToMakeRail = 0.15f;
-	float RailSpeed = 4.0f;
+	int nRail = 10;
+	int nMaxRail = 40;
+	float timeToMakeRail = 0.10f;
+	float RailInterval = 4.0f;	// 레일 간격
+	int OnPlayerFrontRailInterval = nRail - 1;
 
 	CRailMesh* pRailCubeMesh = nullptr;
 
 	float accumulateTime = 0.0f;
 
 	XMFLOAT3 rotationAngle{ 0.f, 0.f, 0.f };
-	XMFLOAT4X4 rotationMatrix;
+	XMFLOAT4X4 rotationMatrix = Matrix4x4::Identity();
 
-	CCubeMesh* pBulletMesh;
+	CCubeMesh* pBulletMesh = NULL;
 	std::deque<CBulletObject*> m_dBulletObject;
 	int BulletNum = 0;
-	float fBulletMaxdistance = 90.f;
+	float fBulletMaxdistance = 50.f;
 };
 

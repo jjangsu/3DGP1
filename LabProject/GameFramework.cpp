@@ -131,18 +131,16 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 void CGameFramework::BuildObjects()
 {
 	CAirplaneMesh *pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
-	// CRailMesh *pAirplaneMesh = new CRailMesh(6.0f, 6.0f, 1.0f);
-	// m_pPlayer = new CAirplanePlayer();
 	m_pPlayer = new CAirplanePlayer();
 	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
 	m_pPlayer->SetMesh(pAirplaneMesh);
 	m_pPlayer->SetColor(RGB(255, 130, 130));
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
 
-	m_nScenes = 5;
 
-	m_nScene = 5;
-	m_pScene = new CRollerCoasterScene();		//CPlayerScene();
+	m_nScene = 5; // 키보드 입력을 따로 받기 위해서 
+
+	m_nScene = new CRollerCoasterScene();
 	m_pScene->BuildObjects();
 
 	m_pScene->m_pPlayer = m_pPlayer;

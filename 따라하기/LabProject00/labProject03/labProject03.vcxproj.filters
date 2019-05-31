@@ -27,8 +27,11 @@
     <ClInclude Include="labProject03.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="CGameFramework.h">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +42,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CGameFramework.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

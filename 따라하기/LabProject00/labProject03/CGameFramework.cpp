@@ -25,6 +25,8 @@ CGameFramework::CGameFramework()
 	m_nWndClientWidth = FRAME_BUFFER_WIDTH;
 	m_nWndClientHeight = FRAME_BUFFER_HEIGHT;
 
+	_tcscpy_s(m_pszFrameRate, _T("LapProject ("));
+
 }
 
 
@@ -368,6 +370,8 @@ void CGameFramework::WaitForGpuComplete()
 
 void CGameFramework::FrameAdvance()
 {
+	m_GameTimer.Tick(0.0f);
+
 	ProcessInput();
 	
 	AnimateObjects();
@@ -438,10 +442,20 @@ void CGameFramework::FrameAdvance()
 	dxgiPresentParameters.pDirtyRects = NULL; 
 	dxgiPresentParameters.pScrollRect = NULL; 
 	dxgiPresentParameters.pScrollOffset = NULL;
-	m_pdxgiSwapChain->Present1(1, 0, &dxgiPresentParameters);
+	m_pdxgiSwapChain->Present(0, 0);
 	/*스왑체인을 프리젠트한다. 
 	프리젠트를 하면 현재 렌더 타겟(후면버퍼)의 내용이 
 	전면버퍼로 옮겨지고 렌더 타겟 인 덱스가 바뀔 것이다.*/
+
+	/*현재의 프레임 레이트를 문자열로 가져와서 주 윈도우의 타이틀로 출력한다. 
+	m_pszBuffer 문자열이 "LapProject ("으로 초기화되었으므로 (m_pszFrameRate+12)에서부터 
+	프레임 레이트를 문자열로 출력 하여 “ FPS)” 문자열과 합친다. 
+	::_itow_s(m_nCurrentFrameRate, (m_pszFrameRate+12), 37, 10); 
+	::wcscat_s((m_pszFrameRate+12), 37, _T(" FPS)")); */
+
+	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37); 
+	::SetWindowText(m_hWnd, m_pszFrameRate);
+
 
 	m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
 }

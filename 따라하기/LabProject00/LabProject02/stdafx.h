@@ -20,7 +20,7 @@
 
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.
 
-#pragma comment(lib, "d3dcomplier")
+#pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 

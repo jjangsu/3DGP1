@@ -20,11 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{812ED76B-AC9F-40B4-AE16-3F947B06E2F1}</ProjectGuid>
+    <ProjectGuid>{DD408348-F506-4C0D-A1E0-9BFCC1CA3C4C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>labProject03</RootNamespace>
+    <RootNamespace>LabProject04</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
-    <ProjectName>LabProject03</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -148,16 +147,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CGameFramework.h" />
-    <ClInclude Include="labProject03.h" />
+    <ClInclude Include="GameFramework.h" />
+    <ClInclude Include="LabProject04.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CGameFramework.cpp" />
-    <ClCompile Include="labProject03.cpp" />
+    <ClCompile Include="GameFramework.cpp" />
+    <ClCompile Include="LabProject04.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -167,10 +166,10 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="labProject03.rc" />
+    <ResourceCompile Include="LabProject04.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="labProject03.ico" />
+    <Image Include="LabProject04.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

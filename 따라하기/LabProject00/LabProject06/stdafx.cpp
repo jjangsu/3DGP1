@@ -90,4 +90,5 @@ ID3D12Resource *CreateBufferResource(ID3D12Device *pd3dDevice, ID3D12GraphicsCom
 			break;
 		}
 	}
+	return pd3dBuffer;
 }

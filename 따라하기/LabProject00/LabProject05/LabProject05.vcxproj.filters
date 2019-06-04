@@ -27,13 +27,13 @@
     <ClInclude Include="LabProject05.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameFramework.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFramework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

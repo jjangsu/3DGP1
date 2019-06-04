@@ -76,12 +76,14 @@ ID3D12Resource *CreateBufferResource(ID3D12Device *pd3dDevice, ID3D12GraphicsCom
 			}
 			break;
 		case D3D12_HEAP_TYPE_UPLOAD:
+		{
 			D3D12_RANGE d3dReadRange = { 0, 0 };
-			UINT8 *pBufferDataBegin = NULL; 
+			UINT8 *pBufferDataBegin = NULL;
 			pd3dBuffer->Map(0, &d3dReadRange, (void **)&pBufferDataBegin);
 			memcpy(pBufferDataBegin, pData, nBytes);
 			pd3dBuffer->Unmap(0, NULL);
 			break;
+		}
 		case D3D12_HEAP_TYPE_READBACK:
 			break;
 		case D3D12_HEAP_TYPE_CUSTOM:

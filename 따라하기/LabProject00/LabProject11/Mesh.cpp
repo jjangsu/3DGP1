@@ -26,7 +26,7 @@ void CMesh::Render(ID3D12GraphicsCommandList *pd3dCommandList)
 	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 	//메쉬의 정점 버퍼 뷰를 설정한다. 
 	pd3dCommandList->IASetVertexBuffers(m_nSlot, 1, &m_d3dVertexBufferView);
-	if (m_pd3dVertexBuffer)
+	if (m_pd3dIndexBuffer)
 	{
 		pd3dCommandList->IASetIndexBuffer(&m_d3dIndexBufferView);
 		pd3dCommandList->DrawIndexedInstanced(m_nIndices, 1, 0, 0, 0);

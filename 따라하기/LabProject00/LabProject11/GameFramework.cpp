@@ -81,6 +81,7 @@ void CGameFramework::OnDestroy()
 	m_pdxgiSwapChain->SetFullscreenState(FALSE, NULL);
 	if (m_pdxgiSwapChain) m_pdxgiSwapChain->Release();
 	if (m_pd3dDevice) m_pd3dDevice->Release();
+	// 나 com객체 다 썼어요! 없애주세요!하는 명령
 	if (m_pdxgiFactory) m_pdxgiFactory->Release();
 
 }
@@ -164,6 +165,7 @@ void CGameFramework::CreateDirect3DDevice()
 
 	::CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void **)&m_pdxgiFactory);
 	//DXGI 팩토리를 생성한다.
+	// m_pdxgiFactory는 이제 Factory를 가리키고 있는 com객체(인터페이스) 포인터 
 
 	IDXGIAdapter1 *pd3dAdapter = NULL;
 	for (UINT i = 0; DXGI_ERROR_NOT_FOUND != m_pdxgiFactory->EnumAdapters1(i, &pd3dAdapter); i++) {
@@ -178,6 +180,7 @@ void CGameFramework::CreateDirect3DDevice()
 	if (!pd3dAdapter) {
 		m_pdxgiFactory->EnumWarpAdapter(_uuidof(IDXGIFactory4), (void **)&pd3dAdapter);
 		D3D12CreateDevice(pd3dAdapter, D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), (void **)&m_pd3dDevice);
+		// com 객체 생성을 위한 create함수 
 	}
 	//특성 레벨 12.0을 지원하는 하드웨어 디바이스를 생성할 수 없으면 WARP 디바이스를 생성한다.
 

@@ -51,7 +51,7 @@
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 
-using Microsoft::WRL::ComPtr;
+// using Microsoft::WRL::ComPtr;
 
 //#define _WITH_SWAPCHAIN_FULLSCREEN_STATE
 

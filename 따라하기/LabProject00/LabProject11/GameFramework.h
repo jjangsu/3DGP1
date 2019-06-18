@@ -13,12 +13,19 @@ private:
 	int m_nWndClientWidth;
 	int m_nWndClientHeight;
 
+	// DX에서 인터페이스를 com객체라고 생각해도됨 
+	// 아래 나오는 인터페이스에 대한 포인터는 com객체의 포인터임 
+	// 생성하기 위한 별도의 함수가 존재
+	// 그 객체에 대한 참조를 추가하기 위한 함수 AddRef()
+	// 이제는 사용 안하겠다는 함수 Release()가 존재
+	// com객체는 우리가 delete해주지 않음 
 	IDXGIFactory4* m_pdxgiFactory;
 	//DXGI 팩토리 인터페이스에 대한 포인터이다. 
 	IDXGISwapChain3* m_pdxgiSwapChain;
 	//스왑 체인 인터페이스에 대한 포인터이다. 주로 디스플레이를 제어하기 위하여 필요하다. 
 	ID3D12Device* m_pd3dDevice;
 	//Direct3D 디바이스 인터페이스에 대한 포인터이다. 주로 리소스를 생성하기 위하여 필요하다.
+	// com 객체를 만들기 위한 변수
 
 	bool m_bMsaa4xEnable = false;
 	UINT m_nMsaa4xQualityLevels = 0;

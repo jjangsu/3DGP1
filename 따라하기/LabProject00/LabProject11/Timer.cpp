@@ -94,6 +94,7 @@ unsigned long CGameTimer::GetFrameRate(LPTSTR lpszString, int nCharacters)
 	return(m_nCurrentFrameRate);
 }
 
-float CGameTimer::GetTimeElapsed() {
+float CGameTimer::GetTimeElapsed() 
+{
 	return(m_fTimeElapsed);
 }

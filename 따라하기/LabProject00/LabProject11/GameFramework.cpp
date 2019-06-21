@@ -110,6 +110,7 @@ void CGameFramework::CreateSwapChain()
 	dxgiSwapChainDesc.SampleDesc.Quality = (m_bMsaa4xEnable) ? (m_nMsaa4xQualityLevels - 1) : 0;
 
 	dxgiSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	// 응용 프로그램이 창의 현재 크기에 가장 잘 맞는 디스플레이 모드 선택 
 	dxgiSwapChainDesc.Windowed = TRUE;
 
 	HRESULT hResult = m_pdxgiFactory->CreateSwapChain(m_pd3dCommandQueue, &dxgiSwapChainDesc,
@@ -162,7 +163,8 @@ void CGameFramework::CreateDirect3DDevice()
 	D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void **)&m_pd3dDebugController);
 	m_pd3dDebugController->EnableDebugLayer();
 #endif
-
+	HRESULT hResult = S_OK;
+	if (FAILED(hResult = CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void **)&m_pdxgiFactory))) return;
 	::CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void **)&m_pdxgiFactory);
 	//DXGI 팩토리를 생성한다.
 	// m_pdxgiFactory는 이제 Factory를 가리키고 있는 com객체(인터페이스) 포인터 
@@ -192,12 +194,13 @@ void CGameFramework::CreateDirect3DDevice()
 	m_pd3dDevice->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &d3dMsaaQualityLevels, sizeof(D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS));
 	m_nMsaa4xQualityLevels = d3dMsaaQualityLevels.NumQualityLevels;
 	m_bMsaa4xEnable = (m_nMsaa4xQualityLevels > 1) ? true : false;
-	//디바이스가 지원하는 다중 샘플의 품질 수준을 확인한다. 
+	//디바이스가 지원하는 다중 샘플의 품질 수준을 확인한다.
 	//다중 샘플의 품질 수준이 1보다 크면 다중 샘플링을 활성화한다. 
 
 	m_pd3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), (void **)&m_pd3dFence);
 	// m_nFenceValue = 0;
 	//펜스를 생성하고 펜스 값을 0으로 설정한다.
+	m_pd3dFence->SetName(L"fence");
 
 	m_hFenceEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 	/*펜스와 동기화를 위한 이벤트 객체를 생성한다(이벤트 객체의 초기값을 FALSE이다).
@@ -217,6 +220,8 @@ void CGameFramework::CreateRtvAndDsvDescriptorHeaps()
 	HRESULT hResult = m_pd3dDevice->CreateDescriptorHeap(&d3dDescriptorHeapDesc,
 		__uuidof(ID3D12DescriptorHeap), (void **)&m_pd3dRtvDescriptorHeap);
 	//렌더 타겟 서술자 힙(서술자의 개수는 스왑체인 버퍼의 개수)을 생성한다.
+	m_pd3dRtvDescriptorHeap->SetName(L"rander terget desc heap");
+	// setName()을 통해서 객체의 이름을 지어놓음 (콤객체에만)
 
 	m_nRtvDescriptorIncrementSize =
 		m_pd3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -227,6 +232,7 @@ void CGameFramework::CreateRtvAndDsvDescriptorHeaps()
 	hResult = m_pd3dDevice->CreateDescriptorHeap(&d3dDescriptorHeapDesc,
 		__uuidof(ID3D12DescriptorHeap), (void **)&m_pd3dDsvDescriptorHeap);
 	//깊이-스텐실 서술자 힙(서술자의 개수는 1)을 생성한다. 
+	m_pd3dDsvDescriptorHeap->SetName(L"Depth Stencil Desc heap");
 
 	m_nDsvDescriptorIncrementSize =
 		m_pd3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -497,6 +503,7 @@ void CGameFramework::WaitForGpuComplete()
 }
 
 void CGameFramework::FrameAdvance()
+// Clear --> Render --> Present
 {
 	m_GameTimer.Tick(60.0f);
 
@@ -530,8 +537,6 @@ void CGameFramework::FrameAdvance()
 	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	//깊이-스텐실 서술자의 CPU 주소를 계산한다. 
 
-	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle);
-	//렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다.
 
 	float pfClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
 	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, pfClearColor/*Colors::Azure*/, 0, NULL);
@@ -541,6 +546,9 @@ void CGameFramework::FrameAdvance()
 	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 	//원하는 값으로 깊이-스텐실(뷰)을 지운다.
 
+
+	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle);
+	//렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다.
 
 	// -----------------------------------
 	//렌더링 코드는 여기에 추가될 것이다.

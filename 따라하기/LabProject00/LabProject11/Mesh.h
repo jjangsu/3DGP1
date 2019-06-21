@@ -46,6 +46,7 @@ protected:
 	ID3D12Resource *m_pd3dIndexUploadBuffer = NULL;
 	/*인덱스 버퍼(인덱스의 배열)와 인덱스 버퍼를 위한 업로드 버퍼에 대한 인터페이스 포인터이다. 
 	인덱스 버퍼는 정점 버퍼(배열)에 대한 인덱스를 가진다.*/
+
 	D3D12_VERTEX_BUFFER_VIEW m_d3dVertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW m_d3dIndexBufferView;
 

@@ -39,7 +39,7 @@ VS_OUTPUT VSDiffused(VS_INPUT input)
 };
 
 //픽셀 셰이더를 정의한다. 
-float4 PSDiffused(VS_OUTPUT input) : SV_TARGET
+float4 PSDiffused(VS_OUTPUT input) : SV_TARGET	
 {
 	//입력되는 픽셀의 색상을 그대로 출력-병합 단계(렌더 타겟)로 출력한다. 
 	return input.color;

@@ -158,7 +158,7 @@ CAirplaneMeshDiffused::CAirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Gra
 
 	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
 
-	//위의 그림과 같은 비행기 메쉬를 표현하기 위한 정점 데이터이다. 
+	// 비행기 메쉬를 표현하기 위한 정점 데이터이다. 
 	CDiffusedVertex pVertices[24 * 3];
 
 	float x1 = fx * 0.2f, y1 = fy * 0.2f, x2 = fx * 0.1f, y3 = fy * 0.3f, y2 = ((y1 - (fy - y3)) / x1) * x2 + (fy - y3); 

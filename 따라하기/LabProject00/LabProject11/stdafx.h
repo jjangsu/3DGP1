@@ -9,8 +9,8 @@
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 
-#define FRAME_BUFFER_WIDTH 640
-#define FRAME_BUFFER_HEIGHT 480
+#define FRAME_BUFFER_WIDTH 1920
+#define FRAME_BUFFER_HEIGHT 1080
 
 /*정점의 색상을 무작위로(Random) 설정하기 위해 사용한다. 
 각 정점의 색상은 난수(Random Number)를 생성하여 지정한다.*/
@@ -36,7 +36,7 @@
 #include "stdafx.h"
 
 #include <string>
-#include <wrl.h>
+// #include <wrl.h> --> ComPtr을 위한 헤더 
 #include <shellapi.h>
 
 #include <d3d12.h>

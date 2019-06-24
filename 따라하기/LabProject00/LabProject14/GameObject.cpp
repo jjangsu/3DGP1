@@ -118,6 +118,8 @@ void CGameObject::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pC
 
 void CGameObject::Rotate(XMFLOAT3 *pxmf3Axis, float fAngle)
 {
+	pxmf3Axis->z += 0.1f;
+
 	XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(pxmf3Axis), XMConvertToRadians(fAngle));
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }

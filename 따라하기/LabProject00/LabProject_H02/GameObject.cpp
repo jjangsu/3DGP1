@@ -40,6 +40,7 @@ void CGameObject::ReleaseUploadBuffers()
 
 void CGameObject::Animate(float fTimeElapsed)
 {
+	pxmf3Axis->z += 0.1;
 
 }
 

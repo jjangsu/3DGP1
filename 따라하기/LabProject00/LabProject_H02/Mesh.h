@@ -32,11 +32,6 @@ public:
 private:
 	int m_nReferences = 0;
 
-public:
-	void AddRef() { m_nReferences++; } 
-	void Release() { if (--m_nReferences <= 0) delete this; }
-
-	void ReleaseUploadBuffers();
 
 protected:
 	ID3D12Resource *m_pd3dVertexBuffer = NULL;
@@ -65,6 +60,11 @@ protected:
 	UINT m_nOffset = 0;
 
 public:
+	void AddRef() { m_nReferences++; }
+	void Release() { if (--m_nReferences <= 0) delete this; }
+
+	void ReleaseUploadBuffers();
+
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList);
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, UINT nInstances);
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView);

@@ -164,8 +164,13 @@ void CGameObject::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pC
 	UINT nInstances, D3D12_VERTEX_BUFFER_VIEW d3dInstancingBufferView) 
 {
 	OnPrepareRender();
-	if (m_pMesh) m_pMesh->Render(pd3dCommandList, nInstances, d3dInstancingBufferView);
+
+	if (m_pMesh) 
+		m_pMesh->Render(pd3dCommandList, nInstances, d3dInstancingBufferView);
 }
+
+
+
 
 CRotatingObject::CRotatingObject()
 {
